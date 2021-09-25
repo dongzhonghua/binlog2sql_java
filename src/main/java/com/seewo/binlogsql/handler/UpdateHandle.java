@@ -1,22 +1,23 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.UpdateRowsEventData;
-import com.seewo.binlogsql.Filter;
-import com.seewo.binlogsql.vo.RowVo;
-import com.seewo.binlogsql.vo.TableVo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static com.seewo.binlogsql.tool.SqlGenerateTool.changeToRowVo;
+import static com.seewo.binlogsql.tool.SqlGenerateTool.getComment;
+import static com.seewo.binlogsql.tool.SqlGenerateTool.updateSql;
+import static com.seewo.binlogsql.tool.TableTool.getTableInfo;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.seewo.binlogsql.tool.SqlGenerateTool.changeToRowVo;
-import static com.seewo.binlogsql.tool.SqlGenerateTool.getComment;
-import static com.seewo.binlogsql.tool.SqlGenerateTool.updateSql;
-import static com.seewo.binlogsql.tool.TableTool.getTableInfo;
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.UpdateRowsEventData;
+import com.seewo.binlogsql.Filter;
+import com.seewo.binlogsql.vo.RowVo;
+import com.seewo.binlogsql.vo.TableVo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author linxixin@cvte.com
@@ -37,7 +38,7 @@ public class UpdateHandle implements BinlogEventHandle {
         UpdateRowsEventData updateRowsEventData = event.getData();
         TableVo tableVoInfo = getTableInfo(updateRowsEventData.getTableId());
 
-        if(!filter.filter(tableVoInfo)) {
+        if (!filter.filter(tableVoInfo)) {
             return Collections.emptyList();
         }
         List<Pair> updateRows = updateRowsEventData.getRows().stream().map(entry -> {

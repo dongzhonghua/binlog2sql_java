@@ -1,8 +1,8 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-
 import java.util.List;
+
+import com.github.shyiko.mysql.binlog.event.Event;
 
 /**
  * @author linxixin@cvte.com
@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface BinlogEventHandle {
 
-    List<String> handle(Event event, boolean isTurn) ;
+    List<String> handle(Event event, boolean isTurn);
 }

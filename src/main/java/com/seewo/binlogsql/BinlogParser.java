@@ -1,14 +1,15 @@
 package com.seewo.binlogsql;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.EventType;
-import com.seewo.binlogsql.handler.BinlogEventHandle;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.EventType;
+import com.seewo.binlogsql.handler.BinlogEventHandle;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author linxixin@cvte.com

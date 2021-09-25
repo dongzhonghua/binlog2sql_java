@@ -1,5 +1,12 @@
 package com.seewo.binlogsql;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.event.EventType;
 import com.seewo.binlogsql.handler.DeleteHandle;
@@ -7,17 +14,11 @@ import com.seewo.binlogsql.handler.InsertHandle;
 import com.seewo.binlogsql.handler.TableMapHandle;
 import com.seewo.binlogsql.handler.UpdateHandle;
 import com.seewo.binlogsql.vo.DbInfoVo;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author linxixin@cvte.com
@@ -29,17 +30,17 @@ import java.sql.Statement;
 public class BinlogListenSql {
     static {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             log.error("没找到jdbc类, 无法使用MYSQL类");
         }
     }
 
     @Getter
-    private BinlogParser    binlogParser = new BinlogParser();
-    private DbInfoVo        dbInfoVo;
+    private BinlogParser binlogParser = new BinlogParser();
+    private DbInfoVo dbInfoVo;
     @Setter
-    private Filter          filter       = new Filter() {
+    private Filter filter = new Filter() {
     };
     private BinaryLogClient binaryLogClient;
 
@@ -48,8 +49,10 @@ public class BinlogListenSql {
     }
 
     private String getFirstBinLogName() {
-        String url = "jdbc:mysql://" + dbInfoVo.getHost() + ":" + dbInfoVo.getPort() + "/mysql";
-        try (Connection conn = DriverManager.getConnection(url, dbInfoVo.getUsername(), dbInfoVo.getPassword()); Statement statement = conn.createStatement()) {
+        String url = "jdbc:mysql://" + dbInfoVo.getHost() + ":" + dbInfoVo.getPort() + "/typecho";
+        log.info(url);
+        try (Connection conn = DriverManager.getConnection(url, dbInfoVo.getUsername(), dbInfoVo.getPassword());
+                Statement statement = conn.createStatement()) {
             ResultSet resultSet = statement.executeQuery("show master logs;");
             while (resultSet.next()) {
                 return resultSet.getString("Log_name");
@@ -62,9 +65,12 @@ public class BinlogListenSql {
 
     private void initBinlogParser() {
 
-        binlogParser.registerHandle(new InsertHandle(filter), EventType.WRITE_ROWS, EventType.EXT_WRITE_ROWS, EventType.PRE_GA_WRITE_ROWS);
-        binlogParser.registerHandle(new DeleteHandle(filter), EventType.DELETE_ROWS, EventType.EXT_DELETE_ROWS, EventType.PRE_GA_DELETE_ROWS);
-        binlogParser.registerHandle(new UpdateHandle(filter), EventType.UPDATE_ROWS, EventType.EXT_UPDATE_ROWS, EventType.PRE_GA_UPDATE_ROWS);
+        binlogParser.registerHandle(new InsertHandle(filter), EventType.WRITE_ROWS, EventType.EXT_WRITE_ROWS,
+                EventType.PRE_GA_WRITE_ROWS);
+        binlogParser.registerHandle(new DeleteHandle(filter), EventType.DELETE_ROWS, EventType.EXT_DELETE_ROWS,
+                EventType.PRE_GA_DELETE_ROWS);
+        binlogParser.registerHandle(new UpdateHandle(filter), EventType.UPDATE_ROWS, EventType.EXT_UPDATE_ROWS,
+                EventType.PRE_GA_UPDATE_ROWS);
         binlogParser.registerHandle(new TableMapHandle(dbInfoVo), EventType.TABLE_MAP);
     }
 
@@ -72,9 +78,9 @@ public class BinlogListenSql {
         initBinlogParser();
 
         binaryLogClient = new BinaryLogClient(dbInfoVo.getHost(),
-                                              dbInfoVo.getPort(),
-                                              dbInfoVo.getUsername(),
-                                              dbInfoVo.getPassword());
+                dbInfoVo.getPort(),
+                dbInfoVo.getUsername(),
+                dbInfoVo.getPassword());
         binaryLogClient.setServerId(1);
         binaryLogClient.setBinlogFilename(getFirstBinLogName());
 

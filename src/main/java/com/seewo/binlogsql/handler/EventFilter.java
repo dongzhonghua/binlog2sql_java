@@ -1,8 +1,8 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-
 import java.util.function.Predicate;
+
+import com.github.shyiko.mysql.binlog.event.Event;
 
 /**
  * @author linxixin@cvte.com

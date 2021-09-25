@@ -1,8 +1,8 @@
 package com.seewo.binlogsql.vo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * @author linxixin@cvte.com

@@ -1,14 +1,5 @@
 package com.seewo.binlogsql.tool;
 
-import com.github.shyiko.mysql.binlog.event.EventHeaderV4;
-import com.github.shyiko.mysql.binlog.event.deserialization.ColumnType;
-import com.seewo.binlogsql.handler.UpdateHandle;
-import com.seewo.binlogsql.vo.ColumnItemDataVo;
-import com.seewo.binlogsql.vo.ColumnVo;
-import com.seewo.binlogsql.vo.RowVo;
-import com.seewo.binlogsql.vo.TableVo;
-
-import javax.xml.bind.DatatypeConverter;
 import java.io.Serializable;
 import java.sql.Time;
 import java.time.Instant;
@@ -21,20 +12,29 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.bind.DatatypeConverter;
+
+import com.github.shyiko.mysql.binlog.event.EventHeaderV4;
+import com.github.shyiko.mysql.binlog.event.deserialization.ColumnType;
+import com.seewo.binlogsql.handler.UpdateHandle;
+import com.seewo.binlogsql.vo.ColumnItemDataVo;
+import com.seewo.binlogsql.vo.ColumnVo;
+import com.seewo.binlogsql.vo.RowVo;
+import com.seewo.binlogsql.vo.TableVo;
+
 /**
  * @author linxixin@cvte.com
  * @since 1.0
  */
 public class SqlGenerateTool {
-    public static final ZoneId            UTC              = ZoneId.of("UTC");
-    public static       DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final ZoneId UTC = ZoneId.of("UTC");
+    public static DateTimeFormatter dateTimeFormater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 构造delete的sql
      *
      * @param tableInfo 表信息, 包含数据库名, 表名, 列名
-     * @param rows      binlog中多行, 每行有对应列的值
-     * @return
+     * @param rows binlog中多行, 每行有对应列的值
      */
     public static List<String> deleteSql(TableVo tableInfo, List<RowVo> rows, String comment) {
         List<String> sqls = new ArrayList<>();
@@ -67,14 +67,15 @@ public class SqlGenerateTool {
      * 构造insert的sql
      *
      * @param tableVoInfo 表信息, 包含数据库名, 表名, 列名
-     * @param rows        binlog中多行, 每行有对应列的值
-     * @return
+     * @param rows binlog中多行, 每行有对应列的值
      */
     public static List<String> insertSql(TableVo tableVoInfo, List<RowVo> rows, String comment) {
-        String insertCondition = tableVoInfo.getColumns().stream().map(columnVo -> "`" + columnVo.getName() + "`").collect(Collectors.joining(","));
+        String insertCondition = tableVoInfo.getColumns().stream().map(columnVo -> "`" + columnVo.getName() + "`")
+                .collect(Collectors.joining(","));
         List<String> sqls = new ArrayList<>();
         for (RowVo row : rows) {
-            String valueCondition = row.getValue().stream().map(SqlGenerateTool::getStringByColumnValue).collect(Collectors.joining(","));
+            String valueCondition = row.getValue().stream().map(SqlGenerateTool::getStringByColumnValue)
+                    .collect(Collectors.joining(","));
             String template = String.format("INSERT INTO `%s`.`%s`(%s) VALUES (%s); #%s"
                     , tableVoInfo.getDbName()
                     , tableVoInfo.getTableName()
@@ -91,8 +92,7 @@ public class SqlGenerateTool {
      * 构造update的sql
      *
      * @param tableInfo 表信息, 包含数据库名, 表名, 列名
-     * @param rowPairs  binlog中多行, 每行有对应列的值
-     * @return
+     * @param rowPairs binlog中多行, 每行有对应列的值
      */
     public static List<String> updateSql(TableVo tableInfo, List<UpdateHandle.Pair> rowPairs, String comment) {
         List<String> sqls = new ArrayList<>();
@@ -117,7 +117,8 @@ public class SqlGenerateTool {
         List<String> whereCondition = new ArrayList<>();
 
         for (ColumnItemDataVo columnItemDataVo : rowVo.getValue()) {
-            String item = String.format("`%s` = %s", columnItemDataVo.getColumn().getName(), getStringByColumnValue(columnItemDataVo));
+            String item = String.format("`%s` = %s", columnItemDataVo.getColumn().getName(),
+                    getStringByColumnValue(columnItemDataVo));
             if (item != null) {
                 whereCondition.add(item);
             }
@@ -146,7 +147,8 @@ public class SqlGenerateTool {
                 return with(String.valueOf(itemDataVo.getValue()));
             case TIME:
                 Time time = (Time) itemDataVo.getValue();
-                return with(LocalDateTime.ofInstant(Instant.ofEpochMilli(time.getTime()), UTC).format(DateTimeFormatter.ISO_LOCAL_TIME));
+                return with(LocalDateTime.ofInstant(Instant.ofEpochMilli(time.getTime()), UTC)
+                        .format(DateTimeFormatter.ISO_LOCAL_TIME));
             case LONGVARCHAR:
             case LONGNVARCHAR:
                 return with(new String((byte[]) itemDataVo.getValue()));

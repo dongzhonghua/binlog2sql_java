@@ -1,11 +1,5 @@
 package com.seewo.binlogsql.tool;
 
-import com.github.shyiko.mysql.binlog.event.TableMapEventData;
-import com.github.shyiko.mysql.binlog.event.deserialization.ColumnType;
-import com.seewo.binlogsql.vo.ColumnVo;
-import com.seewo.binlogsql.vo.DbInfoVo;
-import com.seewo.binlogsql.vo.TableVo;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -15,6 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.github.shyiko.mysql.binlog.event.TableMapEventData;
+import com.github.shyiko.mysql.binlog.event.deserialization.ColumnType;
+import com.seewo.binlogsql.vo.ColumnVo;
+import com.seewo.binlogsql.vo.DbInfoVo;
+import com.seewo.binlogsql.vo.TableVo;
 
 /**
  * @author linxixin@cvte.com
@@ -39,7 +39,8 @@ public class TableTool {
         if (tableInfoMap.containsKey(queryEventData.getTableId())) {
             return;
         }
-        String url = "jdbc:mysql://" + dbInfoVo.getHost() + ":" + dbInfoVo.getPort() + "/" + dbName + "?characterEncoding=UTF-8&autoReconnect=true";
+        String url = "jdbc:mysql://" + dbInfoVo.getHost() + ":" + dbInfoVo.getPort() + "/" + dbName
+                + "?characterEncoding=UTF-8&autoReconnect=true";
 
         try (Connection connection = DriverManager.getConnection(url, dbInfoVo.getUsername(), dbInfoVo.getPassword())) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -56,8 +57,8 @@ public class TableTool {
             while (columns.next()) {
                 String column = columns.getString("COLUMN_NAME");
                 columnVos.add(new ColumnVo(column,
-                                           ColumnType.byCode(queryEventData.getColumnTypes()[i]& 0xFF),
-                                           JDBCType.valueOf(columns.getInt("DATA_TYPE"))));
+                        ColumnType.byCode(queryEventData.getColumnTypes()[i] & 0xFF),
+                        JDBCType.valueOf(columns.getInt("DATA_TYPE"))));
                 i++;
             }
             tableVo.setColumns(columnVos);

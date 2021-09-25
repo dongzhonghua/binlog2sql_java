@@ -1,19 +1,19 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.WriteRowsEventData;
-import com.seewo.binlogsql.Filter;
-import com.seewo.binlogsql.vo.RowVo;
-import com.seewo.binlogsql.vo.TableVo;
-
-import java.util.Collections;
-import java.util.List;
-
 import static com.seewo.binlogsql.tool.SqlGenerateTool.changeToRowVo;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.deleteSql;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.getComment;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.insertSql;
 import static com.seewo.binlogsql.tool.TableTool.getTableInfo;
+
+import java.util.Collections;
+import java.util.List;
+
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.WriteRowsEventData;
+import com.seewo.binlogsql.Filter;
+import com.seewo.binlogsql.vo.RowVo;
+import com.seewo.binlogsql.vo.TableVo;
 
 
 /**
@@ -36,11 +36,11 @@ public class InsertHandle implements BinlogEventHandle {
 
         TableVo tableVoInfo = getTableInfo(writeRowsEventV2.getTableId());
 
-        if(!filter.filter(tableVoInfo)) {
+        if (!filter.filter(tableVoInfo)) {
             return Collections.emptyList();
         }
 
-       List<RowVo> rows = changeToRowVo(tableVoInfo, writeRowsEventV2.getRows());
+        List<RowVo> rows = changeToRowVo(tableVoInfo, writeRowsEventV2.getRows());
         if (isTurn) {
             return deleteSql(tableVoInfo, rows, getComment(event.getHeader()));
         } else {
@@ -48,7 +48,6 @@ public class InsertHandle implements BinlogEventHandle {
         }
 
     }
-
 
 
 }

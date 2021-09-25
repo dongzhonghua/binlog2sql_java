@@ -1,19 +1,19 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.DeleteRowsEventData;
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.seewo.binlogsql.Filter;
-import com.seewo.binlogsql.vo.RowVo;
-import com.seewo.binlogsql.vo.TableVo;
-
-import java.util.Collections;
-import java.util.List;
-
 import static com.seewo.binlogsql.tool.SqlGenerateTool.changeToRowVo;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.deleteSql;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.getComment;
 import static com.seewo.binlogsql.tool.SqlGenerateTool.insertSql;
 import static com.seewo.binlogsql.tool.TableTool.getTableInfo;
+
+import java.util.Collections;
+import java.util.List;
+
+import com.github.shyiko.mysql.binlog.event.DeleteRowsEventData;
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.seewo.binlogsql.Filter;
+import com.seewo.binlogsql.vo.RowVo;
+import com.seewo.binlogsql.vo.TableVo;
 
 /**
  * @author linxixin@cvte.com
@@ -33,7 +33,7 @@ public class DeleteHandle implements BinlogEventHandle {
         DeleteRowsEventData deleteRowsEventData = event.getData();
         TableVo tableVoInfo = getTableInfo(deleteRowsEventData.getTableId());
 
-        if(!filter.filter(tableVoInfo)) {
+        if (!filter.filter(tableVoInfo)) {
             return Collections.emptyList();
         }
 

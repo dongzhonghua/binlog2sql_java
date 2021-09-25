@@ -1,13 +1,13 @@
 package com.seewo.binlogsql.handler;
 
-import com.github.shyiko.mysql.binlog.event.Event;
-import com.github.shyiko.mysql.binlog.event.TableMapEventData;
-import com.seewo.binlogsql.vo.DbInfoVo;
+import static com.seewo.binlogsql.tool.TableTool.setTableInfo;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.seewo.binlogsql.tool.TableTool.setTableInfo;
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.TableMapEventData;
+import com.seewo.binlogsql.vo.DbInfoVo;
 
 /**
  * @author linxixin@cvte.com

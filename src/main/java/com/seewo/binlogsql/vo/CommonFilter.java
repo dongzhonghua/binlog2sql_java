@@ -1,13 +1,14 @@
 package com.seewo.binlogsql.vo;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.github.shyiko.mysql.binlog.event.Event;
 import com.seewo.binlogsql.Filter;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author linxixin@cvte.com
@@ -18,7 +19,7 @@ import java.util.Objects;
 @Slf4j
 public class CommonFilter implements Filter {
     private List<FilterDbTableVo> includeDbTableVos;
-    private long                  startTime;
+    private long startTime;
 
 
     @Override
