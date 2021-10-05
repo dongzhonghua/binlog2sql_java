@@ -1,0 +1,10 @@
+version: "3"
+services:
+  mysql-binlog-sync:
+    container_name: 'mysql-binlog-sync'
+    build: .
+    restart: always
+    image: mysql-binlog-sync:test
+    environment:
+      - JAVA_OPTS=-Xms64m -Xmx256m -Xmn32m
+    network_mode: host

@@ -1,5 +1,6 @@
 package com.seewo.binlogsql;
 
+import com.seewo.binlogsql.config.ConfigHolder;
 import com.seewo.binlogsql.vo.CommonFilter;
 import com.seewo.binlogsql.vo.DbInfoVo;
 
@@ -11,13 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Bootstrap {
-    public static void main(String[] args) throws Exception {
-        log.error("#############");
-        DbInfoVo dbInfoVo = new DbInfoVo();
-        dbInfoVo.setHost("60.205.229.152");
-        dbInfoVo.setPort(3306);
-        dbInfoVo.setUsername("root");
-        dbInfoVo.setPassword("mysql123");
+    public static void main(String[] args) {
+        log.info("#############");
+        DbInfoVo dbInfoVo = ConfigHolder.source;
         new BinlogListenSql(dbInfoVo)
                 .setFilter(new CommonFilter().setStartTime(System.currentTimeMillis()))
                 .connectAndListen();

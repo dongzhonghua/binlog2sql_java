@@ -1,10 +1,13 @@
 package com.seewo.binlogsql.vo;
 
+import lombok.ToString;
+
 /**
  * @author linxixin@cvte.com
  * @version 1.0
  * @description
  */
+@ToString
 public class DbInfoVo {
 
     private String host;
