@@ -1,5 +1,6 @@
 package com.seewo.binlogsql.handler;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -23,7 +24,6 @@ public class SyncDataJdbcHandler {
     public static List<Object> performQuerySql(String sql) {
         List<Object> list = new ArrayList<>();
         try {
-
             ResultSet rs = getLink().executeQuery(sql);
             ResultSetMetaData md = rs.getMetaData(); //获得结果集结构信息,元数据
             int columnCount = md.getColumnCount();   //获得列数
@@ -41,21 +41,17 @@ public class SyncDataJdbcHandler {
     }
 
     public static int performUpdateSql(String sql) {
+        Connection connection = null;
         Statement statement = null;
         try {
-             statement = getLink();
+             connection = C3p0Utils.getConnection();
+            statement = connection.createStatement();
             return statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            C3p0Utils.close(connection, statement);
         }
     }
 

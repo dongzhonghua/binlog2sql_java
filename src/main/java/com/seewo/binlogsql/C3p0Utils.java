@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.seewo.binlogsql.config.ConfigHolder;
@@ -41,7 +42,7 @@ public class C3p0Utils {
         dataSource.setInitialPoolSize(5);//初始化池的大小
         dataSource.setMaxPoolSize(20);//最大大小
         dataSource.setMinPoolSize(5);//最小大小
-        dataSource.setCheckoutTimeout(300);
+        dataSource.setCheckoutTimeout(10000);
     }
 
     //从连接池中取用一个连接
@@ -65,6 +66,25 @@ public class C3p0Utils {
                 throw new RuntimeException("数据库连接关闭出错!", e);
             }
         }
+        if (pst != null) {
+            try {
+                pst.close();
+            } catch (SQLException e) {
+                log.error("Exception in C3p0Utils!", e);
+                throw new RuntimeException("数据库连接关闭出错!", e);
+            }
+        }
+
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.error("Exception in C3p0Utils!", e);
+                throw new RuntimeException("数据库连接关闭出错!", e);
+            }
+        }
+    }
+    public static void close(Connection conn, Statement pst) {
         if (pst != null) {
             try {
                 pst.close();
