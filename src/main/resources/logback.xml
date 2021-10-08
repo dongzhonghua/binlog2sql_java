@@ -18,7 +18,7 @@
     </appender>
 
     <!-- 同时写入log到控制台和文件 -->
-    <root level="trace">
+    <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
