@@ -7,4 +7,6 @@ services:
     image: mysql-binlog-sync:test
     environment:
       - JAVA_OPTS=-Xms64m -Xmx256m -Xmn32m
+    volumes:
+      - /data/logs/binlog-sync:/tmp
     network_mode: host
