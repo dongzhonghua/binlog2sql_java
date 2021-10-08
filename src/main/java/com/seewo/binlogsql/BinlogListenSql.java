@@ -11,7 +11,6 @@ import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.event.EventType;
 import com.seewo.binlogsql.handler.DeleteHandle;
 import com.seewo.binlogsql.handler.InsertHandle;
-import com.seewo.binlogsql.handler.SyncDataJdbcHandler;
 import com.seewo.binlogsql.handler.TableMapHandle;
 import com.seewo.binlogsql.handler.UpdateHandle;
 import com.seewo.binlogsql.vo.DbInfoVo;
@@ -78,7 +77,6 @@ public class BinlogListenSql {
 
     public BinlogListenSql connectAndListen() {
         initBinlogParser();
-        SyncDataJdbcHandler.getInstance();
         binaryLogClient = new BinaryLogClient(dbInfoVo.getHost(),
                 dbInfoVo.getPort(),
                 dbInfoVo.getUsername(),
