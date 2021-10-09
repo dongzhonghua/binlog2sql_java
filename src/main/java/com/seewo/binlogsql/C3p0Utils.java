@@ -48,8 +48,13 @@ public class C3p0Utils {
     //从连接池中取用一个连接
     public static Connection getConnection() {
         try {
-            return dataSource.getConnection();
-
+            Connection connection = dataSource.getConnection();
+            log.info("    最大连接数：" + dataSource.getMaxPoolSize());
+            log.info("    最小连接数：" + dataSource.getMinPoolSize());
+            log.info("      总连接数：" + dataSource.getNumConnections());
+            log.info("正在使用连接数：" + dataSource.getNumBusyConnections());
+            log.info("    空闲连接数：" + dataSource.getNumIdleConnections());
+            return connection;
         } catch (Exception e) {
             log.error("Exception in C3p0Utils!", e);
             throw new RuntimeException("数据库连接出错!", e);
@@ -84,6 +89,7 @@ public class C3p0Utils {
             }
         }
     }
+
     public static void close(Connection conn, Statement pst) {
         if (pst != null) {
             try {

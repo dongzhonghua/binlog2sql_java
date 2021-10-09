@@ -34,10 +34,10 @@ public class BinlogParser {
         if (binlogEventHandle != null) {
             List<String> sql = binlogEventHandle.handle(event, false);
             if (!sql.isEmpty()) {
-                log.info("handle sql: " + sql);
                 for (String s : sql) {
                     int i = performUpdateSql(s);
-                    log.info("同步SQL：影响行数：{},  sql={}", i, sql);
+                    log.info("handle sql: " + s);
+                    log.info("同步SQL：影响行数：{},  sql={}", i, s);
                 }
             }
         }
